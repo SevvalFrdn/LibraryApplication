@@ -1,0 +1,262 @@
+﻿@model IEnumerable<LibraryApplication.EntityLayer.Models.Book>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@await Html.PartialAsync("/Views/ModalPartial/_HeadPartial.cshtml")
+
+<!-- Section-->
+<section class="py-5" style="background-image: url(/BookImageFiles/wallpaperflare.com_wallpaper.jpg); background-size: cover;">
+    @* <button id="sortButton">Sırala (A'dan Z'ye)</button>  *@
+    <form method="get" asp-action="AddBook">
+        <button id="sortButton" style="margin-left:auto">Kitap Ekle</button>
+    </form>
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            @foreach (var item in Model.OrderBy(book => book.Title))
+            {
+                <div class="col mb-5">
+                    <div class="card h-100">
+                        <!-- Check if the book is borrowed -->
+                        @if (item.IsBorrowed)
+                        {
+                            <div class="btn badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem" data-bookid2="@item.BookId">
+                                Ödünç<br /> Verildi
+                            </div>
+                        }
+                        <!-- Book image-->
+                        <div class="img-container">
+                            @if (item.ImageUrl.StartsWith("https:/"))
+                            {
+                                <img class="card-img-top" src="@item.ImageUrl" alt="..." />
+                            }
+                            else
+                            {
+                                <img class="card-img-top" src="~/BookImageFiles/@item.ImageUrl" alt="..." />
+                            }
+                        </div>
+                        <!-- Book details-->
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <!-- Book name-->
+                                <h5 class="fw-bolder"> @item.Title</h5>
+                                <!-- Book Author-->
+                                @Html.DisplayFor(modelItem => item.Author)
+                                @* <div class="BookId">@item.BookId</div> *@
+                            </div>
+                        </div>
+                        <!-- Book actions-->
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            @if (item.IsBorrowed)
+                            {
+                                @* <div class="text-center"><a class="btn btn-outline-warning" href="#">Teslim Et</a></div> *@
+                                @* <br /> *@
+                                <!-- Disable the link -->
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto disabled" href="#">Ödünç Ver</a></div>
+                            }
+                            else
+                            {
+                                <!-- Enable the link -->
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" data-bookid="@item.BookId">Ödünç Ver</a></div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+
+<!-- The Modal for button "Ödüç ver"-->
+<div id="modal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content" style="width:45%;">
+        <span class="close">&times;</span>
+        <div class="row">
+            <div class="col">
+                <form asp-action="Index">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label class="control-label">Adı</label>
+                        <input class="form-control" id="FirstName" name="FirstName" />
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Soyadı</label>
+                        <input class="form-control" id="LastName" name="LastName" />
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Email</label>
+                        <input class="form-control" id="Email" name="Email" />
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Telefon Numarası</label>
+                        <input class="form-control" id="PhoneNumber" name="PhoneNumber" />
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Teslim Alınan Gün</label>
+                        <input class="form-control" id="BorrowedDate" name="BorrowedDate" />
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Teslim Edilecek Gün</label>
+                        <input class="form-control" id="ReturnDate" name="ReturnDate" />
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Not</label>
+                        <input class="form-control" id="Notes" name="Notes" />
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Kitap ID</label>
+                        <input class="form-control" id="BookId" name="BookId" />
+                        <span class="text-danger"></span>
+                    </div>
+
+
+                </form>
+                <div class="form-group">
+                    <input type="submit" value="Ödünç ver" class="btn btn-primary" onclick="BorrowBook()" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- The Modal2 for Button "Ödüç Verildi" -->
+<div id="modal2" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content" style="width:30%!important;">
+        <span class="close2">&times;</span>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label class="control-label">Kitap ID :</label>
+                    <input type="text" id="BookId2" name="BookId" style="border: none;background-color: transparent;outline: none;width: 100%;" />
+                    <span class="text-danger"></span>
+                </div>
+                <span id="bookInfoLabel"></span>
+                <br />
+                <span id="bookInfoLabelReturnedDate"></span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Sayfa yüklendiğinde çalışacak olan kod
+    document.addEventListener("DOMContentLoaded", function () {
+        // "Ödünç Ver" butonlarına tıklama olayı ekleyin
+        var BorrowedButtons = document.querySelectorAll(".btn[data-bookid]");
+        var BorrowedButtons2 = document.querySelectorAll(".btn[data-bookid2]");
+
+        var BookIdInput = document.getElementById("BookId");
+        var BookIdInput2 = document.getElementById("BookId2");
+
+        BorrowedButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+                // Tıklanan butonun BookId si alınır
+                var bookId = button.getAttribute("data-bookid");
+                console.log("Kitap ID:", bookId);
+                //Modal içinde Kitap id sini yazdırıyorum.
+                var BookID = bookId;
+                BookIdInput.value = BookID;
+            });
+        });
+        BorrowedButtons2.forEach(function (button) {
+            button.addEventListener("click", function () {
+                // Tıklanan butonun BookId si alınır
+                var bookId2 = button.getAttribute("data-bookid2");
+                console.log("Kitap ID:", bookId2);
+                //Modal içinde Kitap id sini yazdırıyorum.
+                var BookID2 = bookId2;
+                BookIdInput2.value = BookID2;
+
+                var BookId = document.getElementById("BookId2").value;
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/Book/BookBorrowerInfos',
+                    data: {
+                        BookId: BookId
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        var bookInfo = JSON.parse(data);
+                        const ReturnDate = new Date(bookInfo.ReturnDate).toLocaleDateString("pt-BR");
+                        $("#bookInfoLabel").text("Adı Soyadı: " + bookInfo.FirstName + " " + bookInfo.LastName);
+                        $("#bookInfoLabelReturnedDate").text("Teslim Tarihi: " + ReturnDate);
+
+                        const modal2 = document.getElementById('modal2');
+                        // Get open modal button
+                        const modalBtn2 = document.getElementsByClassName('btn badge bg-dark text-white position-absolute');
+                        for (var i = 0; i < modalBtn2.length; i++) {
+
+                            modalBtn2[i].addEventListener("click", openModal2);
+
+                        }
+                        // Function to OPEN modal
+                        function openModal2() {
+                            modal2.style.display = "block";
+                        }
+                    },
+                    error: function () {
+                        alert("Bir hata oluştu!");
+                        // toastr.error('Bir hata oluştu!');
+                    }
+                });
+            });
+        });
+    });
+
+    function BorrowBook() {
+        var FirstName = document.getElementById("FirstName").value;
+        var LastName = document.getElementById("LastName").value;
+        var Email = document.getElementById("Email").value;
+        var PhoneNumber = document.getElementById("PhoneNumber").value;
+        var BorrowedDate = document.getElementById("BorrowedDate").value;
+        var ReturnDate = document.getElementById("ReturnDate").value;
+        var Notes = document.getElementById("Notes").value;
+        var BookId = document.getElementById("BookId").value;
+
+        $.ajax({
+            type: 'POST',
+            url: '/Book/AddBorrowerInfo',
+            data: {
+                FirstName: FirstName,
+                LastName: LastName,
+                Email: Email,
+                PhoneNumber: PhoneNumber,
+                BorrowedDate: BorrowedDate,
+                ReturnDate: ReturnDate,
+                Notes: Notes,
+                BookId: BookId
+            },
+            dataType: "json",
+            success: function (data) {
+                alert('Ödünç alındı!');
+                location.reload();
+            },
+            error: function () {
+                alert("Bir hata oluştu!");
+                // toastr.error('Bir hata oluştu!');
+            }
+        });
+    }
+</script>
+
+@await Html.PartialAsync("/Views/ModalPartial/_ScriptsPartial.cshtml")
+
+
+

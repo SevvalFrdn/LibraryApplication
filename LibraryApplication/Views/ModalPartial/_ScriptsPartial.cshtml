@@ -1,0 +1,73 @@
+﻿<script>
+    const modal = document.getElementById('modal');
+    // All page modals
+    var modals = document.querySelectorAll('.modal');
+    // Get open modal button
+    const modalBtn = document.getElementsByClassName('btn btn-outline-dark mt-auto');
+    // Get close button
+    const closeBtn = document.getElementsByClassName('close')[0];
+    for (var i = 0; i < modalBtn.length; i++) {
+
+        modalBtn[i].addEventListener("click", openModal);
+
+    }
+    // Listen for OPEN Click
+    //modalBtn.addEventListener('click', openModal);
+    // Listen for CLOSE Click
+    closeBtn.addEventListener('click', closeModal);
+    // Listen for OUTSIDE Click
+    window.addEventListener('click', outsideClick);
+
+    // Function to OPEN modal
+    function openModal() {
+        modal.style.display = "block";
+    }
+
+    // Function to CLOSE modal
+    function closeModal() {
+        modal.style.display = "none";
+    }
+    // Function to CLOSE modal
+    function outsideClick(e) {
+        if (e.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+
+<script>
+    // const modal2 = document.getElementById('modal2');
+    // All page modals
+    var modals2 = document.querySelectorAll('.modal2');
+    // // Get open modal button
+    // const modalBtn2 = document.getElementsByClassName('btn badge bg-dark text-white position-absolute');
+    // Get close button
+    const closeBtn2 = document.getElementsByClassName('close2')[0];
+    // for (var i = 0; i < modalBtn2.length; i++) {
+
+    //     modalBtn2[i].addEventListener("click", openModal2);
+
+    // }
+    // Listen for OPEN Click
+    //modalBtn.addEventListener('click', openModal);
+    // Listen for CLOSE Click
+    closeBtn2.addEventListener('click', closeModal2);
+    // Listen for OUTSIDE Click
+    window.addEventListener('click', outsideClick2);
+
+    // // Function to OPEN modal
+    // function openModal2() {
+    //     modal2.style.display = "block";
+    // }
+
+    // Function to CLOSE modal
+    function closeModal2() {
+        modal2.style.display = "none";
+    }
+    // Function to CLOSE modal
+    function outsideClick2(e) {
+        if (e.target == modal2) {
+            modal2.style.display = "none";
+        }
+    }
+</script>
