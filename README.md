@@ -150,7 +150,7 @@ public async Task<JsonResult> BookBorrowerInfos(Guid BookId)
 
   ![IndexPage](https://github.com/SevvalFrdn/LibraryApplication/blob/master/LibraryApplication/wwwroot/GithubImage/3.png)
   
-- Burada açılan her modal tıklanılan kitaba ait id ile geliyor.
+- Burada açılan her modal açılırken kitaba ait id ile geliyor.
 - Aşağıdaki fotoğrafta bu sefer Ödünç verildi butonuna basınca kitabı kimin aldığı, ne zaman teslim edeceği ve kitap id si bulunuyor.
 
  ![IndexPage](https://github.com/SevvalFrdn/LibraryApplication/blob/master/LibraryApplication/wwwroot/GithubImage/4.png)
