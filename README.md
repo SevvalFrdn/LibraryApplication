@@ -45,7 +45,9 @@ JOIN BorrowerInfos borrow ON b.BookId = borrow.BookId;
 - Projemi .net core (6.0) olarak açtım ve 3 tane class library ekledim. Bunlar benim katmanlarım DataAccessLayer, EntityLayer ve BusinessLayer.
 - EntityLayer katmanımda modelleri tutuyorum. Hazırladığım Book, BorrowerInfo ve BooksBorrowerInfosViewModel bunlar adlarından anlaşılacağı üzere Book kitap bilgilerini BorrowerInfo ise ödünç alan kişilerin bilgilerini tutuyor. View modelim ise bu iki modelin kolonlarını içeririyor.
 - Projemin ana noktası olan ödünç verme olayını modellerimi tasarlarken Books tablosuna IsBorrowed kolonunu(bool) ekleyerek sistemi oluşturdum. Bu şekilde IsBorrowed eğer true ise kitabım kütüphanede değil false ise kütüphanede olarak tanımladım.
-- Aynı şekilde bunu BorrowerInfo tablosundada koydum. Burada IsReturned(yani aslında geri verildimi)(bool) true ise kütüphanede, false ise şuan alan kişide şeklinde yorumladım.
+- Aynı şekilde bunu BorrowerInfo tablosundada koydum. Burada IsReturned(yani aslında geri verildimi)(bool) true ise kütüphanede, false ise şuan alan kişide şeklinde yorumladım.<br/>
+    ![Entity](https://github.com/SevvalFrdn/LibraryApplication/blob/master/LibraryApplication/wwwroot/GithubImage/6.png)
+  burası Entity katmanımın nasıl görünüğünü gösteriyor.
 - Bu modelleri codefirst yardımı ile MSSql'e taşıdım. Dataaccess katmanında yazdığım AppDbContext ve ana projemde appsettings.json kısmında bulunan
   ```c#
    "ConnectionStrings": {
@@ -56,9 +58,13 @@ sayesinde database ile bağlantı kuruyorum. Aynı zamanda program.cs kısmına 
 - İhtiyacım olan katmanlara EntityFrameworkCore kütüphanelerini indiriyorum(ihtiyacım çerçevesinde). Sonrasında DataAccess Katmanıma Repositorylerimi yazıyorum bu katmanda direkt database ile bağlantılı çalışıyorum. Burada özellikle crud işlemlerini metodlar halinde yazılıyor.
 - Abstract ve Concrete klasörleri oluşturarak interfaceleri abstract, classları Concrete klasörlerinde tutuyorum. İçlerine metodları yazıyorum.
 - DataAccess katmanına ServiceRegistiration classı ekliyorum. Bu class sayesinde program.cs e gidip tek tek yazmak yerine katmanda gerekli olan dependency injection gibi yapıları içine yazıyorum. Böylelikle kod karmaşıklığından da kaçınmış olunuyor.
-- ServiceRegistiration içine yazdıklarımızdan sonra program.cs e ekliyoruz(builder.Services.AddDataAccessLayerServices(); ben mesela bu şekilde ekledim).
+- ServiceRegistiration içine yazdıklarımızdan sonra program.cs e ekliyoruz(builder.Services.AddDataAccessLayerServices(); ben mesela bu şekilde ekledim).<br/>
+    ![DataAccess](https://github.com/SevvalFrdn/LibraryApplication/blob/master/LibraryApplication/wwwroot/GithubImage/7.png)
+  burası DataAccess katmanımın nasıl görünüğünü gösteriyor.
 - Sonrasın da Business katmanına geçiyorum aynı şekilde buna da ServiceRegistiration ekliyorum. Bu katmanda Serviceleri kullanıyorum. Yine burada da Interface kullanıyorum. Her modelim için ayrı servisler yazdım.
-- Bu yazdığım servisler sayesinde benim Controllerımdaki yük ortadan kalkmış oldu ve controllerım da sadece servisler ile bağlantılı olarak çalışacak şekilde yazdım.
+- Bu yazdığım servisler sayesinde benim Controllerımdaki yük ortadan kalkmış oldu ve controllerım da sadece servisler ile bağlantılı olarak çalışacak şekilde yazdım.<br/>
+    ![Business](https://github.com/SevvalFrdn/LibraryApplication/blob/master/LibraryApplication/wwwroot/GithubImage/9.png)
+  burası Business katmanımın nasıl görünüğünü gösteriyor.
 - Business katmanımda <br/>
 ```c#
         public async Task<List<Book>> GetListBooks()
@@ -142,22 +148,22 @@ public async Task<JsonResult> BookBorrowerInfos(Guid BookId)
 
 - Uygulama açıldığında kitapların listelendiği bir sayfa karşılıyor bizi (kitaplar kitap ismine göre a dan z ye sıralanmış şekilde listeleniyor.
   
-  ![IndexPage](https://github.com/SevvalFrdn/LibraryApplication/blob/master/LibraryApplication/wwwroot/GithubImage/2.png)
+  ![IndexPage1](https://github.com/SevvalFrdn/LibraryApplication/blob/master/LibraryApplication/wwwroot/GithubImage/2.png)
 
   ödünç verilen kitaplar görüldüğü gibi üzerinde ödünç verildi butonu ile belirtiliyor ve ödünç ver butonları tıklanamaz hale geliyor.
 
 - Aşağıda görüldüğü üzere Ödünç ver butonuna tıklayınca bir modal açılıyor ve buradan kitabı almak isteyen kişinin bilgileri modaldaki ödünç ver butonuna basılarak kaydediliyor.(burada en altta gördüğünüz ıd ile hangi kitabın ödünç verildiği database de tutuluyor)
 
-  ![IndexPage](https://github.com/SevvalFrdn/LibraryApplication/blob/master/LibraryApplication/wwwroot/GithubImage/3.png)
+  ![IndexPage2](https://github.com/SevvalFrdn/LibraryApplication/blob/master/LibraryApplication/wwwroot/GithubImage/3.png)
   
 - Burada açılan her modal açılırken kitaba ait id ile geliyor.
 - Aşağıdaki fotoğrafta bu sefer Ödünç verildi butonuna basınca kitabı kimin aldığı, ne zaman teslim edeceği ve kitap id si bulunuyor.
 
- ![IndexPage](https://github.com/SevvalFrdn/LibraryApplication/blob/master/LibraryApplication/wwwroot/GithubImage/4.png)
+ ![IndexPage3](https://github.com/SevvalFrdn/LibraryApplication/blob/master/LibraryApplication/wwwroot/GithubImage/4.png)
 
 - Ve son olarak kitap ekleme sayfamız var burada kolaylıkla ismini ve yazarına yazdıktan sonra dosyalardan fotoğrafı seçerseniz database'e kayıt ediliyor.
 
- ![IndexPage](https://github.com/SevvalFrdn/LibraryApplication/blob/master/LibraryApplication/wwwroot/GithubImage/5.png)
+ ![IndexPage4](https://github.com/SevvalFrdn/LibraryApplication/blob/master/LibraryApplication/wwwroot/GithubImage/5.png)
 
 
 ## İletişim
